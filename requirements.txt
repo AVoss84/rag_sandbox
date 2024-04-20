@@ -1,0 +1,10 @@
+unstructured
+#unstructured[all-docs]
+unstructured-inference
+unstructured-pytesseract
+#unstructured[s3]
+langchain
+chromadb
+langchain-text-splitters
+pdf2image
+pikepdf
