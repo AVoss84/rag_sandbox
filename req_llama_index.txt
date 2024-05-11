@@ -1,0 +1,23 @@
+ipykernel
+jupyter==1.0.*
+pillow==10.2.*
+pdf2image==1.17.*
+#pdfminer
+pytesseract==0.3.*
+pillow-heif
+tqdm
+pikepdf==8.13.*
+pypdf==4.*
+unstructured==0.12.*
+# unstructured-inference==0.7.*
+unstructured[all-docs]
+# unstructured-inference==0.7.*
+# unstructured-pytesseract
+# unstructured[s3]==0.12.*
+black
+llama-index
+llama-index-llms-bedrock
+llama-index-embeddings-bedrock
+llama-index-vector-stores-chroma
+llama-index-embeddings-huggingface
+deepeval
