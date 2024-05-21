@@ -16,45 +16,46 @@ class CustomOutputParser(BaseOutputParser):
         return filtered_response
 
 # Setup ChatOllama
-llm = ChatOllama(model="llama3", temperature=0.5)
+llm = ChatOllama(model="llama3", temperature=0.8)
 
 
 # Profile and emoji mapping
 profile_emoji_mapping = {
-  "cowboy": "🤠",
-  "pirate": "🏴‍☠️",
-  "hip-hop star": "🎤",
-  "boring insurance clerk": "💼",
-  "Rastafarian": "🧑‍🦱",
-  "alien from another planet": "👽",
-  "poet": "📜",
-  "philosopher": "🤔",
-  "statistician": "📊"
+  "Cowboy": "🤠",
+  "Pirate": "🏴‍☠️",
+  "Hip-hop singer": "🎤",
+  "Insurance employee": "💼",
+  "Rastafarian": "🧑🏾‍🦱",
+  "Alien from another planet": "👽",
+  "Vogon Poet from Hitchiker's guide to the galaxy": "4️⃣2️⃣",
+  "Existentialist Philosopher": "🤔",
+  "William Shakespeare": "🎭",
+  "Master Yoda": "🧙‍♂️"
 }
 
 # Initialize session state
 if "running" not in st.session_state:
     st.session_state.running = False
-if "chosen_profile" not in st.session_state:
-    st.session_state.chosen_profile = None
+
+# if "chosen_profile" not in st.session_state:
+#     st.session_state.chosen_profile = None
 
 
 # Function to run the API call loop
-def run_api_call_loop(duration=120):
+# --------------------------------------
+def run_api_call_loop(duration: int = 120):
+
     response_placeholder = st.empty()  # Create an empty placeholder in the Streamlit app
     progress_bar = st.progress(0)  # Create a progress bar in the Streamlit app
 
-    # Randomly choose a role
-    st.session_state.chosen_profile = random.choice(list(profile_emoji_mapping.keys()))
-
     # Updated prompt with the chosen profile
     query = f"""
-    You are a funny and ironic {st.session_state.chosen_profile}. 
+    You are a friendly but slightly ironic {st.session_state.chosen_profile}. 
     You will act as the timekeeper in a business team meeting where each attendee is assigned a two minutes slot for an update to other team members.     
     Your task is to motivate the speaker to respect the two-minutes rule. 
     Depending on the {{remaining_time}} in seconds you should provide a different response. Note, the less seconds are remaining you should become pushier and urge the speaker to finalize. 
     The remaining time is a number between 0 and 120 seconds. 
-    Please limit your response to a maximum of 80 characters and only show a single response and do not output the remaining time.
+    Please limit your response to a maximum of 70 characters and only show a single response and do not output the remaining time.
     """    
     prompt = ChatPromptTemplate.from_template(query)
     chain = prompt | llm | CustomOutputParser()
@@ -86,11 +87,13 @@ def run_api_call_loop(duration=120):
     progress_bar.progress(100, text="Time's up! [0 seconds left]")
     
     if st.session_state.running:
-        for _ in range(2):
             st.balloons()
-            time.sleep(2)  # Wait 2 seconds between each balloon trigger
-        st.session_state.running = False
-        st.toast('Hooray! Next?', icon='🎉')
+            time.sleep(2)  
+            st.snow()
+            st.session_state.running = False
+            #st.success('Time is up! 🎈🎈🎈')
+            st.toast('Hooray! Next?', icon='🎉')
+            time.sleep(4)  
 
     # Reset the progress bar and response placeholder after the process ends
     progress_bar.progress(0, text="Clock reset")
@@ -106,12 +109,12 @@ def run_api_call_loop(duration=120):
 img = Image.open(os.path.join('pictures', 'allianz_logo.jpg'))  # page name icon
 st.set_page_config(page_title='Agile Clock', page_icon=img, layout="wide", initial_sidebar_state='expanded')
 
+st.session_state.chosen_profile = random.choice(list(profile_emoji_mapping.keys()))
+print(st.session_state.chosen_profile)
+
 # Display the chosen profile and corresponding emoji in the title
-# if st.session_state.chosen_profile:
-#     chosen_emoji = profile_emoji_mapping[st.session_state.chosen_profile]
-#     st.title(f"A.I. Agile Assistant {chosen_emoji} 🕒")
-# else:
-st.title("Agile Assistant 🤠🕒")
+st.title(f"Agile Assistant {profile_emoji_mapping[st.session_state.chosen_profile]} 🕒")
+st.subheader(f"Role: {st.session_state.chosen_profile}")
 
 # Add some space between the title and the rest of the content
 st.markdown("<div style='margin-bottom: 20px;'></div>", unsafe_allow_html=True)
@@ -130,6 +133,6 @@ with col1:
         with response_container:
             run_api_call_loop()
 
-with col2:
-    if st.button('Reset clock'):
-        st.session_state.running = False
+# with col2:
+#     if st.button('Reset clock'):
+#         st.session_state.running = False
