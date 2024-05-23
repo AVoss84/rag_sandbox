@@ -80,7 +80,6 @@ def run_api_call_loop(duration: int = 120):
         )
         # Update the progress bar
         progress_bar.progress(progress_percentage, text=f"{int(elapsed_time)} seconds elapsed out of {duration} seconds [{remaining_time} seconds left]")
-
         time.sleep(5)
     
     # Set the progress bar to 100% after completion
@@ -98,7 +97,6 @@ def run_api_call_loop(duration: int = 120):
     # Reset the progress bar and response placeholder after the process ends
     progress_bar.progress(0, text="Clock reset")
     response_placeholder.empty()
-
 #------------------------------------------------------------------------------
 
 ###############
