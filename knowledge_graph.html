@@ -1,0 +1,250 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 600px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+             #loadingBar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width: 100%;
+                 height: 600px;
+                 background-color:rgba(200,200,200,0.8);
+                 -webkit-transition: all 0.5s ease;
+                 -moz-transition: all 0.5s ease;
+                 -ms-transition: all 0.5s ease;
+                 -o-transition: all 0.5s ease;
+                 transition: all 0.5s ease;
+                 opacity:1;
+             }
+
+             #bar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width:20px;
+                 height:20px;
+                 margin:auto auto auto auto;
+                 border-radius:11px;
+                 border:2px solid rgba(30,30,30,0.05);
+                 background: rgb(0, 173, 246); /* Old browsers */
+                 box-shadow: 2px 0px 4px rgba(0,0,0,0.4);
+             }
+
+             #border {
+                 position:absolute;
+                 top:10px;
+                 left:10px;
+                 width:500px;
+                 height:23px;
+                 margin:auto auto auto auto;
+                 box-shadow: 0px 0px 4px rgba(0,0,0,0.2);
+                 border-radius:10px;
+             }
+
+             #text {
+                 position:absolute;
+                 top:8px;
+                 left:530px;
+                 width:30px;
+                 height:50px;
+                 margin:auto auto auto auto;
+                 font-size:22px;
+                 color: #000000;
+             }
+
+             div.outerBorder {
+                 position:relative;
+                 top:400px;
+                 width:600px;
+                 height:44px;
+                 margin:auto auto auto auto;
+                 border:8px solid rgba(0,0,0,0.1);
+                 background: rgb(252,252,252); /* Old browsers */
+                 background: -moz-linear-gradient(top,  rgba(252,252,252,1) 0%, rgba(237,237,237,1) 100%); /* FF3.6+ */
+                 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(252,252,252,1)), color-stop(100%,rgba(237,237,237,1))); /* Chrome,Safari4+ */
+                 background: -webkit-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Chrome10+,Safari5.1+ */
+                 background: -o-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Opera 11.10+ */
+                 background: -ms-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* IE10+ */
+                 background: linear-gradient(to bottom,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* W3C */
+                 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfcfc', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */
+                 border-radius:72px;
+                 box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+             }
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+            <div id="loadingBar">
+              <div class="outerBorder">
+                <div id="text">0%</div>
+                <div id="border">
+                  <div id="bar"></div>
+                </div>
+              </div>
+            </div>
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#97c2fc", "id": "32f50937-63eb-43bd-bc97-3f69b922b0f4", "label": "32f50937-63eb-43bd-bc97-3f69b922b0f4", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Sach-EA-2023-04-06-Police-Version Nr 23(FLExA)", "label": "Sach-EA-2023-04-06-Police-Version Nr 23(FLExA)", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "1ee7915b-4146-4c9c-a7cf-4b4f95ef3c86", "label": "1ee7915b-4146-4c9c-a7cf-4b4f95ef3c86", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "cf9236e4-9328-4609-bad8-bdec51f1edc4", "label": "cf9236e4-9328-4609-bad8-bdec51f1edc4", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "9b94acf8-c754-40b6-abf6-ec7860fae231", "label": "9b94acf8-c754-40b6-abf6-ec7860fae231", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "38cc4999-4fa5-4543-96de-71e7544caae5", "label": "38cc4999-4fa5-4543-96de-71e7544caae5", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "bdb5e973-d7da-4b56-b37e-1d76eac7a7f5", "label": "bdb5e973-d7da-4b56-b37e-1d76eac7a7f5", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "4dff072d-251b-4ee7-b815-695cf8af1683", "label": "4dff072d-251b-4ee7-b815-695cf8af1683", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "c0fb1a15-c8ac-4d2c-af24-36d17e94fdc5", "label": "c0fb1a15-c8ac-4d2c-af24-36d17e94fdc5", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "37d3f7d8-4024-4912-9acf-76975cc8abb8", "label": "37d3f7d8-4024-4912-9acf-76975cc8abb8", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "b94e0b94-7975-44e2-a60a-c2e468da5264", "label": "b94e0b94-7975-44e2-a60a-c2e468da5264", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "6d1a401d-58d4-4bed-8ffa-e867aca5d2c5", "label": "6d1a401d-58d4-4bed-8ffa-e867aca5d2c5", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "cac6a9a2-ea4c-4f32-a3a1-30a21da7f2b0", "label": "cac6a9a2-ea4c-4f32-a3a1-30a21da7f2b0", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "f32804ed-4b96-4aeb-ad38-6ee04268d261", "label": "f32804ed-4b96-4aeb-ad38-6ee04268d261", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "b682ab49-7efb-4918-86fe-68ef97e2551d", "label": "b682ab49-7efb-4918-86fe-68ef97e2551d", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "dee1c2ed-a289-488f-8b90-9fc93ff72cbb", "label": "dee1c2ed-a289-488f-8b90-9fc93ff72cbb", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "0ea281f2-a96a-4421-ab5b-a6e4ddd0924c", "label": "0ea281f2-a96a-4421-ab5b-a6e4ddd0924c", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "985396a7-f4ab-4edc-816c-424030c23011", "label": "985396a7-f4ab-4edc-816c-424030c23011", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "21f297d7-632f-4679-b5dd-aa316b631548", "label": "21f297d7-632f-4679-b5dd-aa316b631548", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "acc3263d-033c-428a-b5f3-6d37d80db0e3", "label": "acc3263d-033c-428a-b5f3-6d37d80db0e3", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "b5106189-3a64-469d-9cbd-8600b5158ae5", "label": "b5106189-3a64-469d-9cbd-8600b5158ae5", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "473f5f98-1408-4e5f-8e76-bd678420a084", "label": "473f5f98-1408-4e5f-8e76-bd678420a084", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "2650a6d1-32ca-4fc4-995b-d68627e954a4", "label": "2650a6d1-32ca-4fc4-995b-d68627e954a4", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "d286393e-8ef6-4e6a-ba52-0c4eb1d60ce9", "label": "d286393e-8ef6-4e6a-ba52-0c4eb1d60ce9", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "045a49bd-61fc-4270-9c94-b5f332faff10", "label": "045a49bd-61fc-4270-9c94-b5f332faff10", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "90b20ba1-ed8a-4372-862f-75e2d3cb59bc", "label": "90b20ba1-ed8a-4372-862f-75e2d3cb59bc", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "5c258b4c-472b-4b91-86b4-6026c97bdc60", "label": "5c258b4c-472b-4b91-86b4-6026c97bdc60", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Subject", "label": "Subject", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Object", "label": "Object", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Industrielle sachversicherungs-police", "label": "Industrielle sachversicherungs-police", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Isp", "label": "Isp", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "01050730/172-0000", "label": "01050730/172-0000", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "01050730/171-0000", "label": "01050730/171-0000", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Versicherungsnehmer", "label": "Versicherungsnehmer", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Gr\u00fcnbeck wasseraufbereitungs gmbh", "label": "Gr\u00fcnbeck wasseraufbereitungs gmbh", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Versicherungsmakler", "label": "Versicherungsmakler", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Funk versicherungsmakler gmbh", "label": "Funk versicherungsmakler gmbh", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Versicherer", "label": "Versicherer", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Neuverhandlung beitr\u00e4ge", "label": "Neuverhandlung beitr\u00e4ge", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Neuverhandlung der beitr\u00e4ge", "label": "Neuverhandlung der beitr\u00e4ge", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Vertrag zu k\u00fcndigen", "label": "Vertrag zu k\u00fcndigen", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Axa versicherung ag", "label": "Axa versicherung ag", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "40.00", "label": "40.00", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "M\u00fcnchen", "label": "M\u00fcnchen", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Version", "label": "Version", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "23", "label": "23", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Pr\u00e4mienf\u00e4lligkeit", "label": "Pr\u00e4mienf\u00e4lligkeit", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "J\u00e4hrlich im voraus am 01.01.", "label": "J\u00e4hrlich im voraus am 01.01.", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Version nr. 23", "label": "Version nr. 23", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Mehrere", "label": "Mehrere", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Aufnahme des versicherungsortes", "label": "Aufnahme des versicherungsortes", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Aktualisierung der zulieferer und abnehmer", "label": "Aktualisierung der zulieferer und abnehmer", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Streichung des versicherungsortes", "label": "Streichung des versicherungsortes", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Aktualisierung", "label": "Aktualisierung", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Ziffer b.3", "label": "Ziffer b.3", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "21.06.2023", "label": "21.06.2023", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Ausfertigung", "label": "Ausfertigung", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Text", "label": "Text", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Data/sach-ea-2023-04-06-police-version nr 23(flexa", "label": "Data/sach-ea-2023-04-06-police-version nr 23(flexa", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Zulieferer/abnehmer", "label": "Zulieferer/abnehmer", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "3", "label": "3", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Inhaltsverzeichnis", "label": "Inhaltsverzeichnis", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "C beteiligte versicherer", "label": "C beteiligte versicherer", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "B zus\u00e4tzliche vereinbarungen", "label": "B zus\u00e4tzliche vereinbarungen", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "A wesentliche vereinbarungen", "label": "A wesentliche vereinbarungen", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "A.1", "label": "A.1", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Vertragsbestandteile", "label": "Vertragsbestandteile", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "A.2", "label": "A.2", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Versicherungsnehmer und versicherte", "label": "Versicherungsnehmer und versicherte", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "A.3", "label": "A.3", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Versicherungsorte", "label": "Versicherungsorte", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "A.4", "label": "A.4", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Versicherungsumfang", "label": "Versicherungsumfang", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Versicherte gefahren", "label": "Versicherte gefahren", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Deklarationsbl\u00e4ttern", "label": "Deklarationsbl\u00e4ttern", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Sach-versicherung", "label": "Sach-versicherung", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Vertrag", "label": "Vertrag", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "48155 m\u00fcnster", "label": "48155 m\u00fcnster", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "15834 rangsdorf", "label": "15834 rangsdorf", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Sanktionsklausel", "label": "Sanktionsklausel", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "06184 halle-dieskau", "label": "06184 halle-dieskau", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "30659 hannover", "label": "30659 hannover", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "79194 gundelfingen", "label": "79194 gundelfingen", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "25462 rellingen", "label": "25462 rellingen", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "50226 frechen", "label": "50226 frechen", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "89420 h\u00f6chst\u00e4dt", "label": "89420 h\u00f6chst\u00e4dt", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Bestandteile", "label": "Bestandteile", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "17179 gnoien", "label": "17179 gnoien", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Ein jahr", "label": "Ein jahr", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Bedingungen", "label": "Bedingungen", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Klauseln", "label": "Klauseln", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Versicherte", "label": "Versicherte", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Gwt gesellschaft f\u00fcr wasser - und verfahrenstechnik mbh", "label": "Gwt gesellschaft f\u00fcr wasser - und verfahrenstechnik mbh", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Wto wassertechnik ostbayern gmbh", "label": "Wto wassertechnik ostbayern gmbh", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Wwo wassertechnik gmbh", "label": "Wwo wassertechnik gmbh", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Wnp gmbh", "label": "Wnp gmbh", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Gr\u00fcnbeck italia s.r.l.", "label": "Gr\u00fcnbeck italia s.r.l.", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Kmg gmbh", "label": "Kmg gmbh", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Orte", "label": "Orte", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Wenn  e-rev.  vereinbart", "label": "Wenn  e-rev.  vereinbart", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Selbstbeteiligungen", "label": "Selbstbeteiligungen", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "H\u00f6chstentsch\u00e4digungen", "label": "H\u00f6chstentsch\u00e4digungen", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Jahresh\u00f6chstentsch\u00e4digungen", "label": "Jahresh\u00f6chstentsch\u00e4digungen", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Feuer", "label": "Feuer", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Flugk\u00f6rper", "label": "Flugk\u00f6rper", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Ertragsausfall-versicherung", "label": "Ertragsausfall-versicherung", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Brand", "label": "Brand", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Blitzschlag", "label": "Blitzschlag", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Explosion", "label": "Explosion", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "\u00dcberspannung", "label": "\u00dcberspannung", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Selbstbeteiligung von 1.000 euro", "label": "Selbstbeteiligung von 1.000 euro", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "H\u00f6chstentsch\u00e4digung von 2500000 euro", "label": "H\u00f6chstentsch\u00e4digung von 2500000 euro", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Selbstbeteiligung von 1000 euro", "label": "Selbstbeteiligung von 1000 euro", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "H\u00f6chstentsch\u00e4digung von 2.500.000 euro", "label": "H\u00f6chstentsch\u00e4digung von 2.500.000 euro", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Versicherte sachen", "label": "Versicherte sachen", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Bargeld", "label": "Bargeld", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Urkunden", "label": "Urkunden", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Wertpapiere", "label": "Wertpapiere", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Wertsachen", "label": "Wertsachen", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Wiederherstellungskosten", "label": "Wiederherstellungskosten", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Gesch\u00e4ftsunterlagen", "label": "Gesch\u00e4ftsunterlagen", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Datentr\u00e4ger", "label": "Datentr\u00e4ger", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Versicherte kosten", "label": "Versicherte kosten", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Aufr\u00e4umungskosten", "label": "Aufr\u00e4umungskosten", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Feuerl\u00f6schkosten", "label": "Feuerl\u00f6schkosten", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Abbruchkosten", "label": "Abbruchkosten", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Unternehmen", "label": "Unternehmen", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Erstes risiko", "label": "Erstes risiko", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Hinzukommende unternehmen", "label": "Hinzukommende unternehmen", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "H\u00f6chstentsch\u00e4digung 3.000.000 \u20ac", "label": "H\u00f6chstentsch\u00e4digung 3.000.000 \u20ac", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "H\u00f6chstentsch\u00e4digung 2.000.000 \u20ac", "label": "H\u00f6chstentsch\u00e4digung 2.000.000 \u20ac", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "3.000.000 \u20ac", "label": "3.000.000 \u20ac", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "H\u00f6chstentsch\u00e4digung 1.000.000 \u20ac", "label": "H\u00f6chstentsch\u00e4digung 1.000.000 \u20ac", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Sonstige einschl\u00fcsse", "label": "Sonstige einschl\u00fcsse", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Tabsach4", "label": "Tabsach4", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Unterversicherungsverzicht", "label": "Unterversicherungsverzicht", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "2.500.000 \u20ac", "label": "2.500.000 \u20ac", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Vorsorge-versicherung", "label": "Vorsorge-versicherung", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "10 %", "label": "10 %", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Schadenminderungs- und schadenabwendungskosten", "label": "Schadenminderungs- und schadenabwendungskosten", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Auf weisung des versicherers", "label": "Auf weisung des versicherers", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Bis zur versicherungssumme", "label": "Bis zur versicherungssumme", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "File_path", "label": "File_path", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Betriebssch\u00e4den", "label": "Betriebssch\u00e4den", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "H\u00f6chstentsch\u00e4digung von 1.000.000 euro", "label": "H\u00f6chstentsch\u00e4digung von 1.000.000 euro", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Implosion", "label": "Implosion", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "L\u00f6schmedien", "label": "L\u00f6schmedien", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Keine selbstbeteiligung", "label": "Keine selbstbeteiligung", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Glasbruch", "label": "Glasbruch", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Kosten", "label": "Kosten", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Mehrkosten", "label": "Mehrkosten", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Sachverst\u00e4ndigenkosten", "label": "Sachverst\u00e4ndigenkosten", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Wenn entsch\u00e4digungspflichtiger schaden \u00fcbersteigt 12.500 \u20ac", "label": "Wenn entsch\u00e4digungspflichtiger schaden \u00fcbersteigt 12.500 \u20ac", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Entsch\u00e4digung", "label": "Entsch\u00e4digung", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Versicherungssumme", "label": "Versicherungssumme", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Unbenannte orte/au\u00dfenversicherung", "label": "Unbenannte orte/au\u00dfenversicherung", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "1.000.000 \u20ac", "label": "1.000.000 \u20ac", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "2.000.000 \u20ac", "label": "2.000.000 \u20ac", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "R\u00fcckwirkungssch\u00e4den f\u00fcr unbenannte zulieferer/abnehmer", "label": "R\u00fcckwirkungssch\u00e4den f\u00fcr unbenannte zulieferer/abnehmer", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Funk-nrn", "label": "Funk-nrn", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Zugangs-nutzungsbeschr\u00e4nkungen", "label": "Zugangs-nutzungsbeschr\u00e4nkungen", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "N.v.", "label": "N.v.", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "He 500.000 \u20ac", "label": "He 500.000 \u20ac", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Nachhaftung", "label": "Nachhaftung", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "30%", "label": "30%", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Schadenminderungs-schadenabwendungskosten", "label": "Schadenminderungs-schadenabwendungskosten", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Entsch\u00e4digungsgrenze gilt nicht", "label": "Entsch\u00e4digungsgrenze gilt nicht", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Finanzsanktionen", "label": "Finanzsanktionen", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Handelssanktionen", "label": "Handelssanktionen", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Wirtschaftssanktionen", "label": "Wirtschaftssanktionen", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Pr\u00e4mienr\u00fcckgew\u00e4hr", "label": "Pr\u00e4mienr\u00fcckgew\u00e4hr", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "50% jahrespr\u00e4mie", "label": "50% jahrespr\u00e4mie", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Regressverzichtsabkommen", "label": "Regressverzichtsabkommen", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "31.12.2017", "label": "31.12.2017", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Schadenquote \u00fcber 50%", "label": "Schadenquote \u00fcber 50%", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Vertragslaufzeit", "label": "Vertragslaufzeit", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "01.01.2025", "label": "01.01.2025", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Schadenquote", "label": "Schadenquote", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Verh\u00e4ltnis von bruttobeitr\u00e4gen zu schadenzahlungen", "label": "Verh\u00e4ltnis von bruttobeitr\u00e4gen zu schadenzahlungen", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "50%", "label": "50%", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "K\u00fcndigungsfrist", "label": "K\u00fcndigungsfrist", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Ein monat", "label": "Ein monat", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "K\u00fcndigung", "label": "K\u00fcndigung", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Ablauf der folgenden versicherungsperiode", "label": "Ablauf der folgenden versicherungsperiode", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "K\u00fcndigungsm\u00f6glichkeiten", "label": "K\u00fcndigungsm\u00f6glichkeiten", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Von dieser vereinbarung", "label": "Von dieser vereinbarung", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Beitragsanpassungen", "label": "Beitragsanpassungen", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Bayerische landesbrandversicherung ag", "label": "Bayerische landesbrandversicherung ag", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "25.00", "label": "25.00", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Basler versicherung ag dfd", "label": "Basler versicherung ag dfd", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "20.00", "label": "20.00", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Bad homburg", "label": "Bad homburg", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Allianz versicherungs-aktiengesellschaft", "label": "Allianz versicherungs-aktiengesellschaft", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "15.00", "label": "15.00", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Berlin", "label": "Berlin", "shape": "dot", "size": 10}]);
+                  edges = new vis.DataSet([{"arrows": "to", "from": "32f50937-63eb-43bd-bc97-3f69b922b0f4", "label": "SOURCE", "to": "Sach-EA-2023-04-06-Police-Version Nr 23(FLExA)", "width": 1}, {"arrows": "to", "from": "1ee7915b-4146-4c9c-a7cf-4b4f95ef3c86", "label": "SOURCE", "to": "cf9236e4-9328-4609-bad8-bdec51f1edc4", "width": 1}, {"arrows": "to", "from": "9b94acf8-c754-40b6-abf6-ec7860fae231", "label": "SOURCE", "to": "38cc4999-4fa5-4543-96de-71e7544caae5", "width": 1}, {"arrows": "to", "from": "bdb5e973-d7da-4b56-b37e-1d76eac7a7f5", "label": "SOURCE", "to": "4dff072d-251b-4ee7-b815-695cf8af1683", "width": 1}, {"arrows": "to", "from": "c0fb1a15-c8ac-4d2c-af24-36d17e94fdc5", "label": "SOURCE", "to": "37d3f7d8-4024-4912-9acf-76975cc8abb8", "width": 1}, {"arrows": "to", "from": "b94e0b94-7975-44e2-a60a-c2e468da5264", "label": "SOURCE", "to": "6d1a401d-58d4-4bed-8ffa-e867aca5d2c5", "width": 1}, {"arrows": "to", "from": "cac6a9a2-ea4c-4f32-a3a1-30a21da7f2b0", "label": "SOURCE", "to": "f32804ed-4b96-4aeb-ad38-6ee04268d261", "width": 1}, {"arrows": "to", "from": "b682ab49-7efb-4918-86fe-68ef97e2551d", "label": "SOURCE", "to": "dee1c2ed-a289-488f-8b90-9fc93ff72cbb", "width": 1}, {"arrows": "to", "from": "0ea281f2-a96a-4421-ab5b-a6e4ddd0924c", "label": "SOURCE", "to": "985396a7-f4ab-4edc-816c-424030c23011", "width": 1}, {"arrows": "to", "from": "21f297d7-632f-4679-b5dd-aa316b631548", "label": "SOURCE", "to": "acc3263d-033c-428a-b5f3-6d37d80db0e3", "width": 1}, {"arrows": "to", "from": "b5106189-3a64-469d-9cbd-8600b5158ae5", "label": "SOURCE", "to": "473f5f98-1408-4e5f-8e76-bd678420a084", "width": 1}, {"arrows": "to", "from": "2650a6d1-32ca-4fc4-995b-d68627e954a4", "label": "SOURCE", "to": "d286393e-8ef6-4e6a-ba52-0c4eb1d60ce9", "width": 1}, {"arrows": "to", "from": "2650a6d1-32ca-4fc4-995b-d68627e954a4", "label": "NEXT", "to": "045a49bd-61fc-4270-9c94-b5f332faff10", "width": 1}, {"arrows": "to", "from": "045a49bd-61fc-4270-9c94-b5f332faff10", "label": "SOURCE", "to": "d286393e-8ef6-4e6a-ba52-0c4eb1d60ce9", "width": 1}, {"arrows": "to", "from": "045a49bd-61fc-4270-9c94-b5f332faff10", "label": "PREVIOUS", "to": "2650a6d1-32ca-4fc4-995b-d68627e954a4", "width": 1}, {"arrows": "to", "from": "90b20ba1-ed8a-4372-862f-75e2d3cb59bc", "label": "SOURCE", "to": "5c258b4c-472b-4b91-86b4-6026c97bdc60", "width": 1}, {"arrows": "to", "from": "Subject", "label": "Predicate", "to": "Object", "width": 1}, {"arrows": "to", "from": "Industrielle sachversicherungs-police", "label": "Is", "to": "Isp", "width": 1}, {"arrows": "to", "from": "Isp", "label": "Funk-nrn", "to": "01050730/172-0000", "width": 1}, {"arrows": "to", "from": "Isp", "label": "Funk-nrn", "to": "01050730/171-0000", "width": 1}, {"arrows": "to", "from": "Versicherungsnehmer", "label": "Ist", "to": "Gr\u00fcnbeck wasseraufbereitungs gmbh", "width": 1}, {"arrows": "to", "from": "Versicherungsmakler", "label": "Is", "to": "Funk versicherungsmakler gmbh", "width": 1}, {"arrows": "to", "from": "Versicherer", "label": "Kann verlangen", "to": "Neuverhandlung beitr\u00e4ge", "width": 1}, {"arrows": "to", "from": "Versicherer", "label": "Kann verlangen", "to": "Neuverhandlung der beitr\u00e4ge", "width": 1}, {"arrows": "to", "from": "Versicherer", "label": "Hat recht", "to": "Vertrag zu k\u00fcndigen", "width": 1}, {"arrows": "to", "from": "Versicherer", "label": "Is", "to": "Axa versicherung ag", "width": 1}, {"arrows": "to", "from": "Axa versicherung ag", "label": "Quote", "to": "40.00", "width": 1}, {"arrows": "to", "from": "Axa versicherung ag", "label": "Standort", "to": "M\u00fcnchen", "width": 1}, {"arrows": "to", "from": "Version", "label": "Is", "to": "23", "width": 1}, {"arrows": "to", "from": "Pr\u00e4mienf\u00e4lligkeit", "label": "Is", "to": "J\u00e4hrlich im voraus am 01.01.", "width": 1}, {"arrows": "to", "from": "Version nr. 23", "label": "Hat \u00e4nderungen", "to": "Mehrere", "width": 1}, {"arrows": "to", "from": "Version nr. 23", "label": "Hat \u00e4nderung", "to": "Aufnahme des versicherungsortes", "width": 1}, {"arrows": "to", "from": "Version nr. 23", "label": "Hat \u00e4nderung", "to": "Aktualisierung der zulieferer und abnehmer", "width": 1}, {"arrows": "to", "from": "Version nr. 23", "label": "Hat \u00e4nderung", "to": "Streichung des versicherungsortes", "width": 1}, {"arrows": "to", "from": "Aktualisierung", "label": "Gem\u00e4\u00df", "to": "Ziffer b.3", "width": 1}, {"arrows": "to", "from": "Aktualisierung", "label": "G\u00fcltig ab", "to": "21.06.2023", "width": 1}, {"arrows": "to", "from": "Ausfertigung", "label": "Von", "to": "Version nr. 23", "width": 1}, {"arrows": "to", "from": "Text", "label": "File_path", "to": "Data/sach-ea-2023-04-06-police-version nr 23(flexa", "width": 1}, {"arrows": "to", "from": "Text", "label": "Nennt", "to": "Zulieferer/abnehmer", "width": 1}, {"arrows": "to", "from": "Text", "label": "Page_label", "to": "3", "width": 1}, {"arrows": "to", "from": "Inhaltsverzeichnis", "label": "Section", "to": "C beteiligte versicherer", "width": 1}, {"arrows": "to", "from": "Inhaltsverzeichnis", "label": "Section", "to": "B zus\u00e4tzliche vereinbarungen", "width": 1}, {"arrows": "to", "from": "Inhaltsverzeichnis", "label": "Section", "to": "A wesentliche vereinbarungen", "width": 1}, {"arrows": "to", "from": "A.1", "label": "Topic", "to": "Vertragsbestandteile", "width": 1}, {"arrows": "to", "from": "A.2", "label": "Topic", "to": "Versicherungsnehmer und versicherte", "width": 1}, {"arrows": "to", "from": "A.3", "label": "Topic", "to": "Versicherungsorte", "width": 1}, {"arrows": "to", "from": "A.4", "label": "Topic", "to": "Versicherungsumfang", "width": 1}, {"arrows": "to", "from": "Versicherungsumfang", "label": "Umfasst", "to": "Versicherte gefahren", "width": 1}, {"arrows": "to", "from": "Versicherungsumfang", "label": "Ist dokumentiert in", "to": "Deklarationsbl\u00e4ttern", "width": 1}, {"arrows": "to", "from": "Versicherungsumfang", "label": "Umfasst", "to": "Sach-versicherung", "width": 1}, {"arrows": "to", "from": "Vertrag", "label": "Hat versicherungsorte", "to": "48155 m\u00fcnster", "width": 1}, {"arrows": "to", "from": "Vertrag", "label": "Hat versicherungsorte", "to": "15834 rangsdorf", "width": 1}, {"arrows": "to", "from": "Vertrag", "label": "Hat", "to": "Sanktionsklausel", "width": 1}, {"arrows": "to", "from": "Vertrag", "label": "Hat versicherungsorte", "to": "06184 halle-dieskau", "width": 1}, {"arrows": "to", "from": "Vertrag", "label": "Hat versicherungsorte", "to": "30659 hannover", "width": 1}, {"arrows": "to", "from": "Vertrag", "label": "Hat versicherungsorte", "to": "79194 gundelfingen", "width": 1}, {"arrows": "to", "from": "Vertrag", "label": "Hat versicherungsorte", "to": "25462 rellingen", "width": 1}, {"arrows": "to", "from": "Vertrag", "label": "Hat versicherungsorte", "to": "50226 frechen", "width": 1}, {"arrows": "to", "from": "Vertrag", "label": "Hat versicherungsorte", "to": "89420 h\u00f6chst\u00e4dt", "width": 1}, {"arrows": "to", "from": "Vertrag", "label": "Liegen zugrunde", "to": "Bestandteile", "width": 1}, {"arrows": "to", "from": "Vertrag", "label": "Hat versicherungsorte", "to": "17179 gnoien", "width": 1}, {"arrows": "to", "from": "Vertrag", "label": "Verl\u00e4ngert sich um", "to": "Ein jahr", "width": 1}, {"arrows": "to", "from": "Bestandteile", "label": "Sind", "to": "Bedingungen", "width": 1}, {"arrows": "to", "from": "Bestandteile", "label": "Sind", "to": "Klauseln", "width": 1}, {"arrows": "to", "from": "Versicherte", "label": "Sind", "to": "Gwt gesellschaft f\u00fcr wasser - und verfahrenstechnik mbh", "width": 1}, {"arrows": "to", "from": "Versicherte", "label": "Sind", "to": "Wto wassertechnik ostbayern gmbh", "width": 1}, {"arrows": "to", "from": "Versicherte", "label": "Sind", "to": "Wwo wassertechnik gmbh", "width": 1}, {"arrows": "to", "from": "Versicherte", "label": "Sind", "to": "Wnp gmbh", "width": 1}, {"arrows": "to", "from": "Versicherte", "label": "Sind", "to": "Gr\u00fcnbeck italia s.r.l.", "width": 1}, {"arrows": "to", "from": "Versicherte", "label": "Sind", "to": "Kmg gmbh", "width": 1}, {"arrows": "to", "from": "Orte", "label": "Unterliegen vereinbarung \"elektrische anlagen", "to": "Wenn  e-rev.  vereinbart", "width": 1}, {"arrows": "to", "from": "Versicherte gefahren", "label": "Haben", "to": "Selbstbeteiligungen", "width": 1}, {"arrows": "to", "from": "Versicherte gefahren", "label": "Haben", "to": "H\u00f6chstentsch\u00e4digungen", "width": 1}, {"arrows": "to", "from": "Versicherte gefahren", "label": "Haben", "to": "Jahresh\u00f6chstentsch\u00e4digungen", "width": 1}, {"arrows": "to", "from": "Feuer", "label": "Umfasst", "to": "Flugk\u00f6rper", "width": 1}, {"arrows": "to", "from": "Feuer", "label": "Ist gefahr f\u00fcr", "to": "Ertragsausfall-versicherung", "width": 1}, {"arrows": "to", "from": "Feuer", "label": "Umfasst", "to": "Brand", "width": 1}, {"arrows": "to", "from": "Feuer", "label": "Umfasst", "to": "Blitzschlag", "width": 1}, {"arrows": "to", "from": "Feuer", "label": "Umfasst", "to": "Explosion", "width": 1}, {"arrows": "to", "from": "\u00dcberspannung", "label": "Hat", "to": "Selbstbeteiligung von 1.000 euro", "width": 1}, {"arrows": "to", "from": "\u00dcberspannung", "label": "Hat", "to": "H\u00f6chstentsch\u00e4digung von 2500000 euro", "width": 1}, {"arrows": "to", "from": "\u00dcberspannung", "label": "Hat", "to": "Selbstbeteiligung von 1000 euro", "width": 1}, {"arrows": "to", "from": "\u00dcberspannung", "label": "Hat", "to": "H\u00f6chstentsch\u00e4digung von 2.500.000 euro", "width": 1}, {"arrows": "to", "from": "Versicherte sachen", "label": "Beinhalten", "to": "Bargeld", "width": 1}, {"arrows": "to", "from": "Versicherte sachen", "label": "Beinhalten", "to": "Urkunden", "width": 1}, {"arrows": "to", "from": "Versicherte sachen", "label": "Beinhalten", "to": "Wertpapiere", "width": 1}, {"arrows": "to", "from": "Versicherte sachen", "label": "Beinhalten", "to": "Wertsachen", "width": 1}, {"arrows": "to", "from": "Wiederherstellungskosten", "label": "Umfassen", "to": "Gesch\u00e4ftsunterlagen", "width": 1}, {"arrows": "to", "from": "Wiederherstellungskosten", "label": "Umfassen", "to": "Datentr\u00e4ger", "width": 1}, {"arrows": "to", "from": "Versicherte kosten", "label": "Beinhalten", "to": "Aufr\u00e4umungskosten", "width": 1}, {"arrows": "to", "from": "Versicherte kosten", "label": "Beinhalten", "to": "Feuerl\u00f6schkosten", "width": 1}, {"arrows": "to", "from": "Versicherte kosten", "label": "Beinhalten", "to": "Abbruchkosten", "width": 1}, {"arrows": "to", "from": "Unternehmen", "label": "Hinzukommend", "to": "Erstes risiko", "width": 1}, {"arrows": "to", "from": "Hinzukommende unternehmen", "label": "Innerhalb bundesrepublik deutschland", "to": "H\u00f6chstentsch\u00e4digung 3.000.000 \u20ac", "width": 1}, {"arrows": "to", "from": "Hinzukommende unternehmen", "label": "Innerhalb europas", "to": "H\u00f6chstentsch\u00e4digung 2.000.000 \u20ac", "width": 1}, {"arrows": "to", "from": "Hinzukommende unternehmen", "label": "Haben h\u00f6chstentsch\u00e4digung innerhalb deutschland", "to": "3.000.000 \u20ac", "width": 1}, {"arrows": "to", "from": "Hinzukommende unternehmen", "label": "Weltweit", "to": "H\u00f6chstentsch\u00e4digung 1.000.000 \u20ac", "width": 1}, {"arrows": "to", "from": "Sonstige einschl\u00fcsse", "label": "Gem\u00e4\u00df", "to": "Tabsach4", "width": 1}, {"arrows": "to", "from": "Unterversicherungsverzicht", "label": "Gem\u00e4\u00df c.9.5.2.1 b-isp", "to": "2.500.000 \u20ac", "width": 1}, {"arrows": "to", "from": "Vorsorge-versicherung", "label": "Gem\u00e4\u00df b.7.4.1 b-isp", "to": "10 %", "width": 1}, {"arrows": "to", "from": "Schadenminderungs- und schadenabwendungskosten", "label": "Entsch\u00e4digungsgrenze gilt nicht", "to": "Auf weisung des versicherers", "width": 1}, {"arrows": "to", "from": "Schadenminderungs- und schadenabwendungskosten", "label": "Gem\u00e4\u00df b.4.9 b-isp", "to": "Bis zur versicherungssumme", "width": 1}, {"arrows": "to", "from": "File_path", "label": "Ist", "to": "Data/sach-ea-2023-04-06-police-version nr 23(flexa", "width": 1}, {"arrows": "to", "from": "Betriebssch\u00e4den", "label": "Haben", "to": "Selbstbeteiligung von 1.000 euro", "width": 1}, {"arrows": "to", "from": "Betriebssch\u00e4den", "label": "Haben", "to": "H\u00f6chstentsch\u00e4digung von 1.000.000 euro", "width": 1}, {"arrows": "to", "from": "Implosion", "label": "Analog zu", "to": "Explosion", "width": 1}, {"arrows": "to", "from": "L\u00f6schmedien", "label": "Haben", "to": "Keine selbstbeteiligung", "width": 1}, {"arrows": "to", "from": "Glasbruch", "label": "Ist gefahr f\u00fcr", "to": "Ertragsausfall-versicherung", "width": 1}, {"arrows": "to", "from": "Kosten", "label": "Sind versichert auf erstes risiko", "to": "Mehrkosten", "width": 1}, {"arrows": "to", "from": "Mehrkosten", "label": "Haben h\u00f6chstentsch\u00e4digung", "to": "3.000.000 \u20ac", "width": 1}, {"arrows": "to", "from": "Sachverst\u00e4ndigenkosten", "label": "Sind versichert", "to": "Wenn entsch\u00e4digungspflichtiger schaden \u00fcbersteigt 12.500 \u20ac", "width": 1}, {"arrows": "to", "from": "Entsch\u00e4digung", "label": "Ist begrenzt innerhalb", "to": "Versicherungssumme", "width": 1}, {"arrows": "to", "from": "Unbenannte orte/au\u00dfenversicherung", "label": "Hat h\u00f6chstentsch\u00e4digung weltweit", "to": "1.000.000 \u20ac", "width": 1}, {"arrows": "to", "from": "Unbenannte orte/au\u00dfenversicherung", "label": "Hat h\u00f6chstentsch\u00e4digung innerhalb europa", "to": "2.000.000 \u20ac", "width": 1}, {"arrows": "to", "from": "Unbenannte orte/au\u00dfenversicherung", "label": "Hat h\u00f6chstentsch\u00e4digung innerhalb deutschland", "to": "3.000.000 \u20ac", "width": 1}, {"arrows": "to", "from": "R\u00fcckwirkungssch\u00e4den f\u00fcr unbenannte zulieferer/abnehmer", "label": "Haben h\u00f6chstentsch\u00e4digung bei sachschaden weltweit", "to": "1.000.000 \u20ac", "width": 1}, {"arrows": "to", "from": "Funk-nrn", "label": "Has number", "to": "01050730/171-0000", "width": 1}, {"arrows": "to", "from": "Funk-nrn", "label": "Has number", "to": "01050730/172-0000", "width": 1}, {"arrows": "to", "from": "Zugangs-nutzungsbeschr\u00e4nkungen", "label": "Weltweit", "to": "N.v.", "width": 1}, {"arrows": "to", "from": "Zugangs-nutzungsbeschr\u00e4nkungen", "label": "Innerhalb bundesrepublik deutschland", "to": "He 500.000 \u20ac", "width": 1}, {"arrows": "to", "from": "Nachhaftung", "label": "Gem\u00e4\u00df c.9.4 b-isp", "to": "30%", "width": 1}, {"arrows": "to", "from": "Schadenminderungs-schadenabwendungskosten", "label": "Gem\u00e4\u00df c.6.3 b-isp", "to": "Bis zur versicherungssumme", "width": 1}, {"arrows": "to", "from": "Schadenminderungs-schadenabwendungskosten", "label": "Entstehen auf weisung des versicherers", "to": "Entsch\u00e4digungsgrenze gilt nicht", "width": 1}, {"arrows": "to", "from": "Sanktionsklausel", "label": "Betrifft", "to": "Finanzsanktionen", "width": 1}, {"arrows": "to", "from": "Sanktionsklausel", "label": "Betrifft", "to": "Handelssanktionen", "width": 1}, {"arrows": "to", "from": "Sanktionsklausel", "label": "Betrifft", "to": "Wirtschaftssanktionen", "width": 1}, {"arrows": "to", "from": "Pr\u00e4mienr\u00fcckgew\u00e4hr", "label": "Ist begrenzt auf", "to": "50% jahrespr\u00e4mie", "width": 1}, {"arrows": "to", "from": "Regressverzichtsabkommen", "label": "Aufgehoben zum", "to": "31.12.2017", "width": 1}, {"arrows": "to", "from": "Neuverhandlung beitr\u00e4ge", "label": "Wenn", "to": "Schadenquote \u00fcber 50%", "width": 1}, {"arrows": "to", "from": "Vertragslaufzeit", "label": "Ist festgeschrieben bis", "to": "01.01.2025", "width": 1}, {"arrows": "to", "from": "Schadenquote", "label": "Berechnet sich aus", "to": "Verh\u00e4ltnis von bruttobeitr\u00e4gen zu schadenzahlungen", "width": 1}, {"arrows": "to", "from": "Schadenquote", "label": "\u00dcberschreitet", "to": "50%", "width": 1}, {"arrows": "to", "from": "K\u00fcndigungsfrist", "label": "Ist", "to": "Ein monat", "width": 1}, {"arrows": "to", "from": "K\u00fcndigung", "label": "Kann erkl\u00e4rt werden zum", "to": "Ablauf der folgenden versicherungsperiode", "width": 1}, {"arrows": "to", "from": "K\u00fcndigungsm\u00f6glichkeiten", "label": "Bleiben unber\u00fchrt", "to": "Von dieser vereinbarung", "width": 1}, {"arrows": "to", "from": "Beitragsanpassungen", "label": "Bleiben unber\u00fchrt", "to": "Von dieser vereinbarung", "width": 1}, {"arrows": "to", "from": "Bayerische landesbrandversicherung ag", "label": "Standort", "to": "M\u00fcnchen", "width": 1}, {"arrows": "to", "from": "Bayerische landesbrandversicherung ag", "label": "Quote", "to": "25.00", "width": 1}, {"arrows": "to", "from": "Basler versicherung ag dfd", "label": "Quote", "to": "20.00", "width": 1}, {"arrows": "to", "from": "Basler versicherung ag dfd", "label": "Standort", "to": "Bad homburg", "width": 1}, {"arrows": "to", "from": "Allianz versicherungs-aktiengesellschaft", "label": "Quote", "to": "15.00", "width": 1}, {"arrows": "to", "from": "Allianz versicherungs-aktiengesellschaft", "label": "Standort", "to": "Berlin", "width": 1}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+                      network.on("stabilizationProgress", function(params) {
+                          document.getElementById('loadingBar').removeAttribute("style");
+                          var maxWidth = 496;
+                          var minWidth = 20;
+                          var widthFactor = params.iterations/params.total;
+                          var width = Math.max(minWidth,maxWidth * widthFactor);
+                          document.getElementById('bar').style.width = width + 'px';
+                          document.getElementById('text').innerHTML = Math.round(widthFactor*100) + '%';
+                      });
+                      network.once("stabilizationIterationsDone", function() {
+                          document.getElementById('text').innerHTML = '100%';
+                          document.getElementById('bar').style.width = '496px';
+                          document.getElementById('loadingBar').style.opacity = 0;
+                          // really clean the dom element
+                          setTimeout(function () {document.getElementById('loadingBar').style.display = 'none';}, 500);
+                      });
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
