@@ -8,3 +8,4 @@ chromadb
 langchain-text-splitters
 pdf2image
 pikepdf
+chainlit
